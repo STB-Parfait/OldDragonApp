@@ -1,8 +1,6 @@
 package models.character.hability
 
-data class Hability(
-    val title: String,
-    val description: String,
-    val skillMod: String,
-    val modSum: Int
+abstract class Hability(
+    title: String,
+    description: String
 )
