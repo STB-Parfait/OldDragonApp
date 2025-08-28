@@ -1,0 +1,6 @@
+package models.character.item
+
+abstract class Item(
+    val name: String,
+    val price: Int
+)
