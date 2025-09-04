@@ -17,18 +17,24 @@ class Warrior(
     var jp: Int = 0
 
     init {
-        if(level==1){
-            maxHp = 10
-            hp = maxHp
-        } else if(level>1){
-            maxHp = 10 + Dice.roll(10)
-            hp = maxHp
-        } else{
-            error("Level must be 1 or greater")
-        }
+        maxHp = 10
     }
 
-    fun _calcJp(): Int{
+    fun _updateLesserStats(level: Int, skillMods: Map<String, Int>, equipedItems: EquipedSlots) {
+        this._updateCa(equipedItems)
+        this._updateBa(equipedItems,skillMods)
+        this._updateJp(level)
+    }
+    fun _updateMaxHp(){
+        maxHp += Dice.roll(10)
+    }
+    fun _updateCa(equipedItems: EquipedSlots){
+        this.ca = 10 + (skillMods["des"]?:0) + equipedItems.getDefense()
+    }
+    fun _updateBa(equipedItems: EquipedSlots,skillMods: Map<String,Int>){
+        this.ba = level + equipedItems.getDefense() + (skillMods[equipedItems.getDamageType()]?:0)
+    }
+    fun _updateJp(level: Int){
         val x = ceil(level.toDouble() / 2.0).toInt()
         val base = 2 * x + 2
         val correction = when(x){
@@ -36,13 +42,6 @@ class Warrior(
             5 -> -1
             else -> 0
         }
-        return base + correction
-    }
-    fun _updateStats(){
-
-        ca = 10 + (skillMods["des"]?:0) + equipedItems.getDefense()
-        ba = level + equipedItems.getDefense() + (skillMods[equipedItems.getDamageType()]?:0)
-        jp = _calcJp()
-
+        this.jp = base + correction
     }
 }
